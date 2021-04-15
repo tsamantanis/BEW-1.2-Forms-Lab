@@ -43,14 +43,6 @@ def create_book():
 
 @main.route('/create_author', methods=['GET', 'POST'])
 def create_author():
-    # TODO: Make an AuthorForm instance
-
-    # TODO: If the form was submitted and is valid, create a new Author object
-    # and save to the database, then flash a success message to the user and
-    # redirect to the homepage
-
-    # TODO: Send the form object to the template, and use it to render the form
-    # fields
     form = AuthorForm()
 
     # if form was submitted and contained no errors
