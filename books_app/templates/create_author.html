@@ -2,8 +2,25 @@
 
 {% block content %}
 
-<p>Author creation form.</p>
+<form method="POST" action="{{ url_for('main.create_author') }}">
+    {{ form.csrf_token }}
+    <fieldset>
+        <legend>Add a new author</legend>
 
-<!-- TODO: Add a <form> element here and use the form variable to show the labels & fields -->
+        {{ form.name.label }}
+        {{ form.name }}
+
+        {{ form.biography.label }}
+        {{ form.biography }}
+
+        {{ form.birth_date.label }}
+        {{ form.birth_date }}
+
+        {{ form.country.label }}
+        {{ form.country }}
+
+        {{ form.submit }}
+    </fieldset>
+</form>
 
 {% endblock %}

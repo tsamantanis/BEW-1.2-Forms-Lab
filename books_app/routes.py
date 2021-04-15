@@ -51,7 +51,22 @@ def create_author():
 
     # TODO: Send the form object to the template, and use it to render the form
     # fields
-    return render_template('create_author.html')
+    form = AuthorForm()
+
+    # if form was submitted and contained no errors
+    if form.validate_on_submit():
+        new_author = Author(
+            name=form.name.data,
+            biography=form.biography.data,
+            birth_date=form.birth_date.data,
+            country=form.country.data,
+        )
+        db.session.add(new_author)
+        db.session.commit()
+
+        flash('New author was created successfully.')
+        return redirect(url_for('main.homepage'))
+    return render_template('create_author.html', form=form)
 
 @main.route('/create_genre', methods=['GET', 'POST'])
 def create_genre():

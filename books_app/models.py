@@ -27,7 +27,7 @@ class Book(db.Model):
     # The author - Who wrote it?
     author_id = db.Column(db.Integer, db.ForeignKey('author.id'), nullable=False)
     author = db.relationship('Author', back_populates='books')
-    
+
     # The audience - Who is this book written for?
     audience = db.Column(db.Enum(Audience), default=Audience.ALL)
 
@@ -50,6 +50,8 @@ class Author(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(80), nullable=False)
     biography = db.Column(db.String(200))
+    birth_date = db.Column(db.Date)
+    country = db.Column(db.String(200))
     books = db.relationship('Book', back_populates='author')
 
     def __str__(self):
