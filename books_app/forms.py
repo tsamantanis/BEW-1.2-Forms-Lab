@@ -27,3 +27,9 @@ class GenreForm(FlaskForm):
     """Form to create a genre."""
     name = StringField('Genre Name', validators=[DataRequired(), Length(min=1, max=80)])
     submit = SubmitField('Submit')
+
+class UserForm(FlaskForm):
+    """Form to create a user."""
+    username = StringField("Username", validators=[DataRequired(), Length(min=3, max=80)])
+    favorite_books = QuerySelectMultipleField('Favorite Books', query_factory=lambda: Book.query)
+    submit = SubmitField("Submit")

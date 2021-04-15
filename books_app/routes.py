@@ -2,8 +2,8 @@
 import os
 from flask import Blueprint, request, render_template, redirect, url_for, flash
 from datetime import date, datetime
-from books_app.models import Book, Author, Genre, User
-from books_app.forms import BookForm, AuthorForm, GenreForm
+from books_app.models import Book, Author, Genre, User, favorite_books_table
+from books_app.forms import BookForm, AuthorForm, GenreForm, UserForm
 
 # Import app and db from events_app package so that we can run app
 from books_app import app, db
@@ -77,8 +77,19 @@ def create_genre():
 
 @main.route('/create_user', methods=['GET', 'POST'])
 def create_user():
-    # STRETCH CHALLENGE: Fill out the Create User route
-    return "Not Yet Implemented"
+    form = UserForm()
+
+    if form.validate_on_submit():
+        new_user = User(
+            username = form.username.data,
+            favorite_books = form.favorite_books.data
+        )
+        db.session.add(new_user)
+        db.session.commit()
+
+        flash('New book was created successfully.')
+        return redirect(url_for('main.profile', username=new_user.username, books=new_user.favorite_books))
+    return render_template('create_user.html', form=form)
 
 @main.route('/book/<book_id>', methods=['GET', 'POST'])
 def book_detail(book_id):
@@ -100,9 +111,13 @@ def book_detail(book_id):
 
 @main.route('/profile/<username>')
 def profile(username):
-    # TODO: Make a query for the user with the given username, and send to the
-    # template
+    user = User.query.filter_by(username=username).one()
+    form = UserForm()
+    print(user.favorite_books)
+    if form.validate_on_submit():
+        user.username = form.username.data
 
-    # STRETCH CHALLENGE: Add ability to modify a user's username or favorite
-    # books
-    return render_template('profile.html', username=username)
+        db.session.commit()
+        flash("User successfully updated")
+        return redirect(url_for("main.homepage"))
+    return render_template("profile.html", username=username, books=user.favorite_books)
