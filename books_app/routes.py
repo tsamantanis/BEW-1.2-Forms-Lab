@@ -18,7 +18,7 @@ main = Blueprint("main", __name__)
 def homepage():
     all_books = Book.query.all()
     all_users = User.query.all()
-    return render_template('home.html', 
+    return render_template('home.html',
         all_books=all_books, all_users=all_users)
 
 @main.route('/create_book', methods=['GET', 'POST'])
@@ -26,7 +26,7 @@ def create_book():
     form = BookForm()
 
     # if form was submitted and contained no errors
-    if form.validate_on_submit(): 
+    if form.validate_on_submit():
         new_book = Book(
             title=form.title.data,
             publish_date=form.publish_date.data,
@@ -55,15 +55,18 @@ def create_author():
 
 @main.route('/create_genre', methods=['GET', 'POST'])
 def create_genre():
-    # TODO: Make a GenreForm instance
+    form = GenreForm()
 
-    # TODO: If the form was submitted and is valid, create a new Genre object
-    # and save to the database, then flash a success message to the user and
-    # redirect to the homepage
+    if form.validate_on_submit():
+        new_genre = Genre(
+            name=form.name.data,
+        )
+        db.session.add(new_genre)
+        db.session.commit()
 
-    # TODO: Send the form object to the template, and use it to render the form
-    # fields
-    return render_template('create_genre.html')
+        flash('New genre was created successfully.')
+        return redirect(url_for('main.homepage'))
+    return render_template('create_genre.html', form=form)
 
 @main.route('/create_user', methods=['GET', 'POST'])
 def create_user():
@@ -75,8 +78,8 @@ def book_detail(book_id):
     book = Book.query.get(book_id)
     form = BookForm(obj=book)
 
-    # TODO: If the form was submitted and is valid, update the fields in the 
-    # Book object and save to the database, then flash a success message to the 
+    # TODO: If the form was submitted and is valid, update the fields in the
+    # Book object and save to the database, then flash a success message to the
     # user and redirect to the book detail page
 
     return render_template('book_detail.html', book=book, form=form)
@@ -86,6 +89,6 @@ def profile(username):
     # TODO: Make a query for the user with the given username, and send to the
     # template
 
-    # STRETCH CHALLENGE: Add ability to modify a user's username or favorite 
+    # STRETCH CHALLENGE: Add ability to modify a user's username or favorite
     # books
     return render_template('profile.html', username=username)
