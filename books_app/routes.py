@@ -28,11 +28,11 @@ def create_book():
     # if form was submitted and contained no errors
     if form.validate_on_submit():
         new_book = Book(
-            title=form.title.data,
-            publish_date=form.publish_date.data,
-            author=form.author.data,
-            audience=form.audience.data,
-            genres=form.genres.data
+            title = form.title.data,
+            publish_date = form.publish_date.data,
+            author = form.author.data,
+            audience = form.audience.data,
+            genres = form.genres.data
         )
         db.session.add(new_book)
         db.session.commit()
@@ -48,10 +48,10 @@ def create_author():
     # if form was submitted and contained no errors
     if form.validate_on_submit():
         new_author = Author(
-            name=form.name.data,
-            biography=form.biography.data,
-            birth_date=form.birth_date.data,
-            country=form.country.data,
+            name = form.name.data,
+            biography = form.biography.data,
+            birth_date = form.birth_date.data,
+            country = form.country.data,
         )
         db.session.add(new_author)
         db.session.commit()
@@ -66,7 +66,7 @@ def create_genre():
 
     if form.validate_on_submit():
         new_genre = Genre(
-            name=form.name.data,
+            name = form.name.data,
         )
         db.session.add(new_genre)
         db.session.commit()
@@ -85,10 +85,17 @@ def book_detail(book_id):
     book = Book.query.get(book_id)
     form = BookForm(obj=book)
 
-    # TODO: If the form was submitted and is valid, update the fields in the
-    # Book object and save to the database, then flash a success message to the
-    # user and redirect to the book detail page
+    if form.validate_on_submit():
+        book.title = form.title.data
+        book.publish_date = form.publish_date.data
+        book.author = form.author.data
+        book.audience = form.audience.data
+        book.genres = form.genres.data
 
+        db.session.add(book)
+        db.session.commit()
+
+        flash('Book was successfully edited.')
     return render_template('book_detail.html', book=book, form=form)
 
 @main.route('/profile/<username>')
